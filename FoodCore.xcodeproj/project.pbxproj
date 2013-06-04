@@ -17,7 +17,21 @@
 		9CF583C3175EA935006EB5E4 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9CF583C2175EA935006EB5E4 /* Default@2x.png */; };
 		9CF583C5175EA935006EB5E4 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9CF583C4175EA935006EB5E4 /* Default-568h@2x.png */; };
 		9CF583C8175EA935006EB5E4 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9CF583C6175EA935006EB5E4 /* MainStoryboard.storyboard */; };
-		9CF583CB175EA935006EB5E4 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CF583CA175EA935006EB5E4 /* ViewController.m */; };
+		9CF583D3175EA9D9006EB5E4 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CF583D2175EA9D9006EB5E4 /* ViewController.m */; };
+		9CF583D5175EAA1A006EB5E4 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CF583D4175EAA1A006EB5E4 /* CoreLocation.framework */; };
+		9CF583D7175EAA21006EB5E4 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CF583D6175EAA21006EB5E4 /* CoreData.framework */; };
+		9CF583E5175EADBB006EB5E4 /* Foursquare2.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CF583D9175EADBB006EB5E4 /* Foursquare2.m */; };
+		9CF583E6175EADBB006EB5E4 /* FSRequester.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CF583DB175EADBB006EB5E4 /* FSRequester.m */; };
+		9CF583E7175EADBB006EB5E4 /* FSTargetCallback.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CF583DD175EADBB006EB5E4 /* FSTargetCallback.m */; };
+		9CF583E8175EADBB006EB5E4 /* FSWebLogin.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CF583DF175EADBB006EB5E4 /* FSWebLogin.m */; };
+		9CF583E9175EADBB006EB5E4 /* FSWebLogin.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9CF583E0175EADBB006EB5E4 /* FSWebLogin.xib */; };
+		9CF583EA175EADBB006EB5E4 /* pin.png in Resources */ = {isa = PBXBuildFile; fileRef = 9CF583E1175EADBB006EB5E4 /* pin.png */; };
+		9CF583EB175EADBB006EB5E4 /* pin@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9CF583E2175EADBB006EB5E4 /* pin@2x.png */; };
+		9CF583EC175EADBB006EB5E4 /* poweredByFoursquare_gray.png in Resources */ = {isa = PBXBuildFile; fileRef = 9CF583E3175EADBB006EB5E4 /* poweredByFoursquare_gray.png */; };
+		9CF583ED175EADBB006EB5E4 /* poweredByFoursquare_gray@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9CF583E4175EADBB006EB5E4 /* poweredByFoursquare_gray@2x.png */; };
+		9CF583F1175EB0CF006EB5E4 /* FoodCore.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9CF583EF175EB0CF006EB5E4 /* FoodCore.xcdatamodeld */; };
+		9CF583F4175EB3B0006EB5E4 /* Venue.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CF583F3175EB3B0006EB5E4 /* Venue.m */; };
+		9CF583F7175EB3B1006EB5E4 /* Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CF583F6175EB3B1006EB5E4 /* Category.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,8 +49,28 @@
 		9CF583C2175EA935006EB5E4 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		9CF583C4175EA935006EB5E4 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		9CF583C7175EA935006EB5E4 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
-		9CF583C9175EA935006EB5E4 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		9CF583CA175EA935006EB5E4 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		9CF583D1175EA9D9006EB5E4 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		9CF583D2175EA9D9006EB5E4 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		9CF583D4175EAA1A006EB5E4 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		9CF583D6175EAA21006EB5E4 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		9CF583D8175EADBB006EB5E4 /* Foursquare2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Foursquare2.h; sourceTree = "<group>"; };
+		9CF583D9175EADBB006EB5E4 /* Foursquare2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Foursquare2.m; sourceTree = "<group>"; };
+		9CF583DA175EADBB006EB5E4 /* FSRequester.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSRequester.h; sourceTree = "<group>"; };
+		9CF583DB175EADBB006EB5E4 /* FSRequester.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSRequester.m; sourceTree = "<group>"; };
+		9CF583DC175EADBB006EB5E4 /* FSTargetCallback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSTargetCallback.h; sourceTree = "<group>"; };
+		9CF583DD175EADBB006EB5E4 /* FSTargetCallback.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSTargetCallback.m; sourceTree = "<group>"; };
+		9CF583DE175EADBB006EB5E4 /* FSWebLogin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSWebLogin.h; sourceTree = "<group>"; };
+		9CF583DF175EADBB006EB5E4 /* FSWebLogin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSWebLogin.m; sourceTree = "<group>"; };
+		9CF583E0175EADBB006EB5E4 /* FSWebLogin.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FSWebLogin.xib; sourceTree = "<group>"; };
+		9CF583E1175EADBB006EB5E4 /* pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pin.png; sourceTree = "<group>"; };
+		9CF583E2175EADBB006EB5E4 /* pin@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pin@2x.png"; sourceTree = "<group>"; };
+		9CF583E3175EADBB006EB5E4 /* poweredByFoursquare_gray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = poweredByFoursquare_gray.png; sourceTree = "<group>"; };
+		9CF583E4175EADBB006EB5E4 /* poweredByFoursquare_gray@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "poweredByFoursquare_gray@2x.png"; sourceTree = "<group>"; };
+		9CF583F0175EB0CF006EB5E4 /* FoodCore.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = FoodCore.xcdatamodel; sourceTree = "<group>"; };
+		9CF583F2175EB3B0006EB5E4 /* Venue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Venue.h; sourceTree = "<group>"; };
+		9CF583F3175EB3B0006EB5E4 /* Venue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Venue.m; sourceTree = "<group>"; };
+		9CF583F5175EB3B1006EB5E4 /* Category.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Category.h; sourceTree = "<group>"; };
+		9CF583F6175EB3B1006EB5E4 /* Category.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Category.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,6 +78,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9CF583D7175EAA21006EB5E4 /* CoreData.framework in Frameworks */,
+				9CF583D5175EAA1A006EB5E4 /* CoreLocation.framework in Frameworks */,
 				9CF583AF175EA935006EB5E4 /* UIKit.framework in Frameworks */,
 				9CF583B1175EA935006EB5E4 /* Foundation.framework in Frameworks */,
 				9CF583B3175EA935006EB5E4 /* CoreGraphics.framework in Frameworks */,
@@ -73,6 +109,8 @@
 		9CF583AD175EA935006EB5E4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9CF583D6175EAA21006EB5E4 /* CoreData.framework */,
+				9CF583D4175EAA1A006EB5E4 /* CoreLocation.framework */,
 				9CF583AE175EA935006EB5E4 /* UIKit.framework */,
 				9CF583B0175EA935006EB5E4 /* Foundation.framework */,
 				9CF583B2175EA935006EB5E4 /* CoreGraphics.framework */,
@@ -86,8 +124,9 @@
 				9CF583BD175EA935006EB5E4 /* AppDelegate.h */,
 				9CF583BE175EA935006EB5E4 /* AppDelegate.m */,
 				9CF583C6175EA935006EB5E4 /* MainStoryboard.storyboard */,
-				9CF583C9175EA935006EB5E4 /* ViewController.h */,
-				9CF583CA175EA935006EB5E4 /* ViewController.m */,
+				9CF583F9175EB3E0006EB5E4 /* ViewControllers */,
+				9CF583F8175EB3CB006EB5E4 /* Models */,
+				9CF583EE175EADC1006EB5E4 /* Foursquare2 */,
 				9CF583B5175EA935006EB5E4 /* Supporting Files */,
 			);
 			path = FoodCore;
@@ -105,6 +144,47 @@
 				9CF583C4175EA935006EB5E4 /* Default-568h@2x.png */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		9CF583EE175EADC1006EB5E4 /* Foursquare2 */ = {
+			isa = PBXGroup;
+			children = (
+				9CF583D8175EADBB006EB5E4 /* Foursquare2.h */,
+				9CF583D9175EADBB006EB5E4 /* Foursquare2.m */,
+				9CF583DA175EADBB006EB5E4 /* FSRequester.h */,
+				9CF583DB175EADBB006EB5E4 /* FSRequester.m */,
+				9CF583DC175EADBB006EB5E4 /* FSTargetCallback.h */,
+				9CF583DD175EADBB006EB5E4 /* FSTargetCallback.m */,
+				9CF583DE175EADBB006EB5E4 /* FSWebLogin.h */,
+				9CF583DF175EADBB006EB5E4 /* FSWebLogin.m */,
+				9CF583E0175EADBB006EB5E4 /* FSWebLogin.xib */,
+				9CF583E1175EADBB006EB5E4 /* pin.png */,
+				9CF583E2175EADBB006EB5E4 /* pin@2x.png */,
+				9CF583E3175EADBB006EB5E4 /* poweredByFoursquare_gray.png */,
+				9CF583E4175EADBB006EB5E4 /* poweredByFoursquare_gray@2x.png */,
+			);
+			name = Foursquare2;
+			sourceTree = "<group>";
+		};
+		9CF583F8175EB3CB006EB5E4 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				9CF583EF175EB0CF006EB5E4 /* FoodCore.xcdatamodeld */,
+				9CF583F5175EB3B1006EB5E4 /* Category.h */,
+				9CF583F6175EB3B1006EB5E4 /* Category.m */,
+				9CF583F2175EB3B0006EB5E4 /* Venue.h */,
+				9CF583F3175EB3B0006EB5E4 /* Venue.m */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		9CF583F9175EB3E0006EB5E4 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				9CF583D2175EA9D9006EB5E4 /* ViewController.m */,
+				9CF583D1175EA9D9006EB5E4 /* ViewController.h */,
+			);
+			name = ViewControllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -163,6 +243,11 @@
 				9CF583C3175EA935006EB5E4 /* Default@2x.png in Resources */,
 				9CF583C5175EA935006EB5E4 /* Default-568h@2x.png in Resources */,
 				9CF583C8175EA935006EB5E4 /* MainStoryboard.storyboard in Resources */,
+				9CF583E9175EADBB006EB5E4 /* FSWebLogin.xib in Resources */,
+				9CF583EA175EADBB006EB5E4 /* pin.png in Resources */,
+				9CF583EB175EADBB006EB5E4 /* pin@2x.png in Resources */,
+				9CF583EC175EADBB006EB5E4 /* poweredByFoursquare_gray.png in Resources */,
+				9CF583ED175EADBB006EB5E4 /* poweredByFoursquare_gray@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -175,7 +260,14 @@
 			files = (
 				9CF583BB175EA935006EB5E4 /* main.m in Sources */,
 				9CF583BF175EA935006EB5E4 /* AppDelegate.m in Sources */,
-				9CF583CB175EA935006EB5E4 /* ViewController.m in Sources */,
+				9CF583D3175EA9D9006EB5E4 /* ViewController.m in Sources */,
+				9CF583E5175EADBB006EB5E4 /* Foursquare2.m in Sources */,
+				9CF583E6175EADBB006EB5E4 /* FSRequester.m in Sources */,
+				9CF583E7175EADBB006EB5E4 /* FSTargetCallback.m in Sources */,
+				9CF583E8175EADBB006EB5E4 /* FSWebLogin.m in Sources */,
+				9CF583F1175EB0CF006EB5E4 /* FoodCore.xcdatamodeld in Sources */,
+				9CF583F4175EB3B0006EB5E4 /* Venue.m in Sources */,
+				9CF583F7175EB3B1006EB5E4 /* Category.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -300,6 +392,19 @@
 			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		9CF583EF175EB0CF006EB5E4 /* FoodCore.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				9CF583F0175EB0CF006EB5E4 /* FoodCore.xcdatamodel */,
+			);
+			currentVersion = 9CF583F0175EB0CF006EB5E4 /* FoodCore.xcdatamodel */;
+			path = FoodCore.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 9CF583A3175EA935006EB5E4 /* Project object */;
 }

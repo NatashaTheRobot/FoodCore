@@ -7,13 +7,50 @@
 //
 
 #import "AppDelegate.h"
+#import <CoreData/CoreData.h>
+
+@interface AppDelegate ()
+
+@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
+@property (strong, nonatomic) NSManagedObjectModel *managedObjectModel;
+@property (strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+
+- (void)setupManagedObjectContext;
+
+@end
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [self setupManagedObjectContext];
     // Override point for customization after application launch.
     return YES;
+}
+
+- (void)setupManagedObjectContext
+{
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    
+    NSURL *documentDirectoryURL = [fileManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask][0];
+
+    NSURL *persistentURL = [documentDirectoryURL URLByAppendingPathComponent:@"FoodCore.sqlite"];
+    
+    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"FoodCore" withExtension:@".momd"];
+    
+    self.managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
+    self.persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:self.managedObjectModel];
+    
+    NSError *error = nil;
+    NSPersistentStore *persistentStore = [self.persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType
+                                                                                       configuration:nil
+                                                                                                 URL:persistentURL
+                                                                                             options:nil
+                                                                                               error:&error];
+    if (persistentStore) {
+        self.managedObjectContext = [[NSManagedObjectContext alloc] init];
+        self.managedObjectContext.persistentStoreCoordinator = self.persistentStoreCoordinator;
+    }
 }
 							
 - (void)applicationWillResignActive:(UIApplication *)application
