@@ -22,6 +22,10 @@
 
 - (void)setupLocationManager;
 
+- (void)persistFoursquareVenueFromResult:(NSArray *)venuesArray;
+- (Category *)categoryWithUniqueName:(NSString *)categoryName;
+- (void)setupVenues;
+
 @end
 
 @implementation ViewController
@@ -69,73 +73,106 @@
                                      radius:[NSNumber numberWithInt:800]
                                  categoryId:nil
                                    callback:^(BOOL success, id result) {
-                                       NSLog(@"%@", result);
+                                       if (success) {
+                                           
+                                           [self persistFoursquareVenueFromResult:[result valueForKeyPath:@"response.venues"]];
+                                           
+                                       } else {
+                                           NSLog(@"ERROR: %@", result);
+                                       }
                                    }];
-    
-//    _venuesSortedByCheckins = [NSArray array];
-//    
-//    [Foursquare2 searchVenuesNearByLatitude:[NSNumber numberWithFloat:latitude]
-//                                  longitude:[NSNumber numberWithFloat:longitude]
-//                                 accuracyLL:nil
-//                                   altitude:nil
-//                                accuracyAlt:nil
-//                                      query:nil
-//                                      limit:[NSNumber numberWithInt:100]
-//                                 categoryId:@"4d4b7105d754a06374d81259"
-//                                     intent:0
-//                                     radius:[NSNumber numberWithInt:800]
-//                                   callback:^(BOOL success, id result) {
-//                                       
-//                                       if (success) {
-//                                           
-//                                           
-//                                           NSMutableArray *venuesUnsorted = [NSMutableArray array];
-//                                           
-//                                           NSArray *venuesArray = [result valueForKeyPath:@"response.venues"];
-//                                           
-//                                           for (NSDictionary *venue in venuesArray) {
-//                                               
-//                                               Venue *newVenue = [[Venue alloc] init];
-//                                               
-//                                               newVenue.name = [venue objectForKey:@"name"];
-//                                               newVenue.numberOfPeopleHereNow = [[venue valueForKeyPath:@"hereNow.count"] intValue];
-//                                               newVenue.address = [venue valueForKeyPath:@"location.address"];
-//                                               newVenue.city = [venue valueForKeyPath:@"location.city"];
-//                                               newVenue.state = [venue valueForKeyPath:@"location.state"];
-//                                               newVenue.zipCode = [[venue valueForKeyPath:@"location.postalCode"] intValue];
-//                                               newVenue.latitude = [[venue valueForKeyPath:@"location.lat"] floatValue];
-//                                               newVenue.longitude = [[venue valueForKeyPath:@"location.lng"] floatValue];
-//                                               newVenue.menuURL = [NSURL URLWithString:[venue valueForKeyPath:@"menu.mobileUrl"]];
-//                                               newVenue.reservationURL = [NSURL URLWithString:[venue valueForKeyPath:@"reservations.url"]];
-//                                               newVenue.checkInCount = [[venue valueForKeyPath:@"stats.checkinsCount"] intValue];
-//                                               newVenue.usersCount = [[venue valueForKeyPath:@"stats.usersCount"] intValue];
-//                                               newVenue.foursquareId = [venue objectForKey:@"id"];
-//                                               
-//                                               [venuesUnsorted addObject:newVenue];
-//                                           }
-//                                           
-//                                           _venuesSortedByCheckins = [venuesUnsorted sortedArrayUsingComparator:^NSComparisonResult(Venue *venue1, Venue *venue2) {
-//                                               NSNumber *checkinCount1 = [NSNumber numberWithInt:venue1.checkInCount];
-//                                               NSNumber *checkinCount2 = [NSNumber numberWithInt:venue2.checkInCount];
-//                                               
-//                                               return ([checkinCount1 compare:checkinCount2] == NSOrderedAscending);
-//                                           }];
-//                                           
-//                                           for (UIViewController *viewController in self.childViewControllers) {
-//                                               if ([viewController isKindOfClass:[VenuesListViewController class]]) {
-//                                                   ((VenuesListViewController *)viewController).venues = _venuesSortedByCheckins;
-//                                               } else if ([viewController isKindOfClass:[VenueMapViewController class]]){
-//                                                   ((VenueMapViewController*)viewController).venues = _venuesSortedByCheckins;
-//                                               }
-//                                           }
-//                                           
+                                               
 //                                           [__activityIndicator stopAnimating];
 //                                           [self getImagesForVenues];
-//                                       }
-//                                   }];
     
 }
 
+- (void)persistFoursquareVenueFromResult:(NSArray *)venuesArray
+{
+    for (NSDictionary *venueDictionary in venuesArray) {
+        
+        Venue *venue = [NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass([Venue class])
+                                                     inManagedObjectContext:self.managedObjectContext];
+        
+        venue.name = [venueDictionary objectForKey:@"name"];
+        venue.peopleHereNow = [NSNumber numberWithInt:[[venueDictionary valueForKeyPath:@"hereNow.count"] intValue]];
+        venue.address = [venueDictionary valueForKeyPath:@"location.address"];
+        venue.city = [venueDictionary valueForKeyPath:@"location.city"];
+        venue.state = [venueDictionary valueForKeyPath:@"location.state"];
+        venue.zipCode = [NSNumber numberWithInt:[[venueDictionary valueForKeyPath:@"location.postalCode"] intValue]];
+        venue.latitude = [NSNumber numberWithFloat:[[venueDictionary valueForKeyPath:@"location.lat"] floatValue]];
+        venue.longitude = [NSNumber numberWithFloat:[[venueDictionary valueForKeyPath:@"location.lng"] floatValue]];
+        venue.menuURLString = [venueDictionary valueForKeyPath:@"menu.mobileUrl"];
+        venue.reservationURLString = [venueDictionary valueForKeyPath:@"reservations.url"];
+        venue.checkInCount = [NSNumber numberWithInt:[[venueDictionary valueForKeyPath:@"stats.checkinsCount"] intValue]];
+        venue.foursquareId = [venueDictionary objectForKey:@"id"];
+        
+        // get the venue category
+        NSString *categoryName;
+        if ([venueDictionary[@"categories"] count] == 0) {
+            categoryName = @"Unknown";
+        } else {
+            categoryName = venueDictionary[@"categories"][0][@"pluralName"];
+        }
+        venue.category = [self categoryWithUniqueName:categoryName];
+    }
+    
+    NSError *saveError = nil;
+    BOOL didSave = [self.managedObjectContext save:&saveError];
+    
+    if (!didSave) {
+        NSLog(@"SAVE ERROR: %@", saveError.description);
+    }
+    
+    [self setupVenues];
+
+}
+
+- (void)setupVenues
+{
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    fetchRequest.entity = [NSEntityDescription entityForName:NSStringFromClass([Venue class])
+                                      inManagedObjectContext:self.managedObjectContext];
+    fetchRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"category.name" ascending:YES], [NSSortDescriptor sortDescriptorWithKey:@"checkInCount" ascending:NO]];
+    self.fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
+                                                                        managedObjectContext:self.managedObjectContext
+                                                                          sectionNameKeyPath:@"category.name"
+                                                                                   cacheName:nil];
+    NSError *fetchError = nil;
+    BOOL success = [self.fetchedResultsController performFetch:&fetchError];
+    
+    if (!success) {
+        NSLog(@"FETCH ERROR: %@", fetchError.description);
+    } else {
+        [self.tableView reloadData];
+    }
+}
+
+- (Category *)categoryWithUniqueName:(NSString *)categoryName
+{
+    Category *category = nil;
+    
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    fetchRequest.entity = [NSEntityDescription entityForName:NSStringFromClass([Category class])
+                                 inManagedObjectContext:self.managedObjectContext];
+    fetchRequest.predicate = [NSPredicate predicateWithFormat:@"name = %@", categoryName];
+    
+    NSError *fetchError = nil;
+    NSArray *categoriesArray = [self.managedObjectContext executeFetchRequest:fetchRequest error:&fetchError];
+    
+    if (fetchError) {
+        NSLog(@"CATEGORY FETCH ERROR: %@", fetchError.description);
+    } else if (categoriesArray.count == 0) {
+        category = [NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass([Category class])
+                                                 inManagedObjectContext:self.managedObjectContext];
+        category.name = categoryName;
+    } else {
+        category = categoriesArray[0];
+    }
+    
+    
+    return category;
+}
 
 #pragma mark - Table view data source
 
@@ -160,6 +197,8 @@
 {
     static NSString *CellIdentifier = @"venue";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+    
+    
     
     Venue *venue = [self.fetchedResultsController objectAtIndexPath:indexPath];
     

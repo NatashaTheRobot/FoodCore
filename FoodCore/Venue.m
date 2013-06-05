@@ -7,6 +7,7 @@
 //
 
 #import "Venue.h"
+#import "Category.h"
 
 
 @implementation Venue
@@ -23,6 +24,7 @@
 @dynamic peopleHereNow;
 @dynamic menuURLString;
 @dynamic reservationURLString;
+@dynamic address;
 @dynamic category;
 
 @end

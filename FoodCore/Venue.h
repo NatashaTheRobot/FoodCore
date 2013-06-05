@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
+@class Category;
 
 @interface Venue : NSManagedObject
 
@@ -24,6 +25,7 @@
 @property (nonatomic, retain) NSNumber * peopleHereNow;
 @property (nonatomic, retain) NSString * menuURLString;
 @property (nonatomic, retain) NSString * reservationURLString;
-@property (nonatomic, retain) NSManagedObject *category;
+@property (nonatomic, retain) NSString * address;
+@property (nonatomic, retain) Category *category;
 
 @end
