@@ -12,6 +12,10 @@
                         <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <activityIndicatorView key="tableFooterView" hidden="YES" opaque="NO" contentMode="scaleToFill" hidesWhenStopped="YES" style="gray" id="jXB-94-D7R">
+                            <rect key="frame" x="0.0" y="66" width="320" height="20"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        </activityIndicatorView>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="venue" textLabel="ID8-xu-SRh" detailTextLabel="EgA-yR-fn0" style="IBUITableViewCellStyleSubtitle" id="dMO-gj-iL0">
                                 <rect key="frame" x="0.0" y="22" width="320" height="44"/>
@@ -37,6 +41,9 @@
                         </prototypes>
                     </tableView>
                     <navigationItem key="navigationItem" title="FoodCore" id="NaI-8o-CzQ"/>
+                    <connections>
+                        <outlet property="activityIndicator" destination="jXB-94-D7R" id="7bX-rq-oP1"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fOh-7y-Thp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -61,6 +68,9 @@
     <classes>
         <class className="ViewController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="activityIndicator" candidateClass="UIActivityIndicatorView"/>
+            </relationships>
         </class>
     </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

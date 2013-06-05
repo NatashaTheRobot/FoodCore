@@ -13,6 +13,8 @@
 
 @interface ViewController ()
 
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
+
 @property (strong, nonatomic) CLLocationManager *locationManager;
 
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
@@ -21,9 +23,13 @@
 @property (strong, nonatomic) NSURL *documentsDirectory;
 
 - (void)setupLocationManager;
+- (void)addRefreshControl;
+- (void)refresh;
 
+- (void)getFoursquareVenuesWithLatitude:(CGFloat)latitude longitude:(CGFloat)longitude;
 - (void)persistFoursquareVenueFromResult:(NSArray *)venuesArray;
 - (Category *)categoryWithUniqueName:(NSString *)categoryName;
+- (BOOL)venueExists:(NSDictionary *)venueDictionary;
 - (void)setupVenues;
 
 @end
@@ -34,10 +40,29 @@
 {
     [super viewDidLoad];
     
+    [self.activityIndicator startAnimating];
+    
     self.fileManager = [NSFileManager defaultManager];
     self.documentsDirectory = [self.fileManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask][0];
     
+    [self addRefreshControl];
+    
     [self setupLocationManager];
+    
+}
+
+- (void)addRefreshControl
+{
+    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+    [refreshControl addTarget:self
+                       action:@selector(refresh)
+             forControlEvents:UIControlEventValueChanged];
+    self.refreshControl = refreshControl;
+}
+
+- (void)refresh
+{
+    [self.locationManager startUpdatingLocation];
 }
 
 #pragma mark - Location manager
@@ -54,13 +79,13 @@
     CLLocation *location = locations[0];
     
     [self getFoursquareVenuesWithLatitude:(CGFloat)location.coordinate.latitude
-                             andLongitude:(CGFloat)location.coordinate.longitude];
+                                longitude:(CGFloat)location.coordinate.longitude];
     
     [self.locationManager stopUpdatingLocation];
 }
 
 #pragma mark - foursquare
-- (void)getFoursquareVenuesWithLatitude:(CGFloat)latitude andLongitude:(CGFloat)longitude
+- (void)getFoursquareVenuesWithLatitude:(CGFloat)latitude longitude:(CGFloat)longitude
 {
     [Foursquare2 searchVenuesNearByLatitude:[NSNumber numberWithFloat:latitude]
                                   longitude:[NSNumber numberWithFloat:longitude]
@@ -80,9 +105,11 @@
                                        } else {
                                            NSLog(@"ERROR: %@", result);
                                        }
+                                       [self.activityIndicator stopAnimating];
+                                       [self.refreshControl endRefreshing];
+                                       
                                    }];
                                                
-//                                           [__activityIndicator stopAnimating];
 //                                           [self getImagesForVenues];
     
 }
@@ -91,30 +118,34 @@
 {
     for (NSDictionary *venueDictionary in venuesArray) {
         
-        Venue *venue = [NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass([Venue class])
-                                                     inManagedObjectContext:self.managedObjectContext];
-        
-        venue.name = [venueDictionary objectForKey:@"name"];
-        venue.peopleHereNow = [NSNumber numberWithInt:[[venueDictionary valueForKeyPath:@"hereNow.count"] intValue]];
-        venue.address = [venueDictionary valueForKeyPath:@"location.address"];
-        venue.city = [venueDictionary valueForKeyPath:@"location.city"];
-        venue.state = [venueDictionary valueForKeyPath:@"location.state"];
-        venue.zipCode = [NSNumber numberWithInt:[[venueDictionary valueForKeyPath:@"location.postalCode"] intValue]];
-        venue.latitude = [NSNumber numberWithFloat:[[venueDictionary valueForKeyPath:@"location.lat"] floatValue]];
-        venue.longitude = [NSNumber numberWithFloat:[[venueDictionary valueForKeyPath:@"location.lng"] floatValue]];
-        venue.menuURLString = [venueDictionary valueForKeyPath:@"menu.mobileUrl"];
-        venue.reservationURLString = [venueDictionary valueForKeyPath:@"reservations.url"];
-        venue.checkInCount = [NSNumber numberWithInt:[[venueDictionary valueForKeyPath:@"stats.checkinsCount"] intValue]];
-        venue.foursquareId = [venueDictionary objectForKey:@"id"];
-        
-        // get the venue category
-        NSString *categoryName;
-        if ([venueDictionary[@"categories"] count] == 0) {
-            categoryName = @"Unknown";
-        } else {
-            categoryName = venueDictionary[@"categories"][0][@"pluralName"];
+        // check if venue exists by latitude / longitude?
+        if (![self venueExists:venueDictionary]) {
+            
+            Venue *venue = [NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass([Venue class])
+                                                         inManagedObjectContext:self.managedObjectContext];
+            
+            venue.name = [venueDictionary objectForKey:@"name"];
+            venue.peopleHereNow = [NSNumber numberWithInt:[[venueDictionary valueForKeyPath:@"hereNow.count"] intValue]];
+            venue.address = [venueDictionary valueForKeyPath:@"location.address"];
+            venue.city = [venueDictionary valueForKeyPath:@"location.city"];
+            venue.state = [venueDictionary valueForKeyPath:@"location.state"];
+            venue.zipCode = [NSNumber numberWithInt:[[venueDictionary valueForKeyPath:@"location.postalCode"] intValue]];
+            venue.latitude = [NSNumber numberWithFloat:[[venueDictionary valueForKeyPath:@"location.lat"] floatValue]];
+            venue.longitude = [NSNumber numberWithFloat:[[venueDictionary valueForKeyPath:@"location.lng"] floatValue]];
+            venue.menuURLString = [venueDictionary valueForKeyPath:@"menu.mobileUrl"];
+            venue.reservationURLString = [venueDictionary valueForKeyPath:@"reservations.url"];
+            venue.checkInCount = [NSNumber numberWithInt:[[venueDictionary valueForKeyPath:@"stats.checkinsCount"] intValue]];
+            venue.foursquareId = [venueDictionary objectForKey:@"id"];
+            
+            // get the venue category
+            NSString *categoryName;
+            if ([venueDictionary[@"categories"] count] == 0) {
+                categoryName = @"Unknown";
+            } else {
+                categoryName = venueDictionary[@"categories"][0][@"pluralName"];
+            }
+            venue.category = [self categoryWithUniqueName:categoryName];
         }
-        venue.category = [self categoryWithUniqueName:categoryName];
     }
     
     NSError *saveError = nil;
@@ -125,7 +156,7 @@
     }
     
     [self setupVenues];
-
+        
 }
 
 - (void)setupVenues
@@ -146,6 +177,30 @@
     } else {
         [self.tableView reloadData];
     }
+}
+
+- (BOOL)venueExists:(NSDictionary *)venueDictionary
+{
+    NSNumber *latitude = [NSNumber numberWithFloat:[[venueDictionary valueForKeyPath:@"location.lat"] floatValue]];
+    NSNumber *longitude = [NSNumber numberWithFloat:[[venueDictionary valueForKeyPath:@"location.lng"] floatValue]];
+    
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    fetchRequest.entity = [NSEntityDescription entityForName:NSStringFromClass([Venue class])
+                                      inManagedObjectContext:self.managedObjectContext];
+    fetchRequest.predicate = [NSPredicate predicateWithFormat:@"latitude = %@ AND longitude = %@", latitude, longitude];
+    
+    NSError *fetchError = nil;
+    NSArray *fetchedVenueArray = [self.managedObjectContext executeFetchRequest:fetchRequest error:&fetchError];
+    
+    if (fetchError) {
+        NSLog(@"Venue FETCH ERROR: %@", fetchError.description);
+    } else if (fetchedVenueArray.count == 0) {
+        return NO;
+    } else {
+        return YES;
+    }
+    
+    return NO;
 }
 
 - (Category *)categoryWithUniqueName:(NSString *)categoryName
