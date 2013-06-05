@@ -8,13 +8,17 @@
 
 #import "ViewController.h"
 #import "Foursquare2.h"
-#import <CoreData/CoreData.h>
 #import "Category.h"
 #import "Venue.h"
 
 @interface ViewController ()
 
 @property (strong, nonatomic) CLLocationManager *locationManager;
+
+@property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
+
+@property (strong, nonatomic) NSFileManager *fileManager;
+@property (strong, nonatomic) NSURL *documentsDirectory;
 
 - (void)setupLocationManager;
 
@@ -25,7 +29,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
+    self.fileManager = [NSFileManager defaultManager];
+    self.documentsDirectory = [self.fileManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask][0];
+    
     [self setupLocationManager];
 }
 
@@ -62,7 +69,7 @@
                                      radius:[NSNumber numberWithInt:800]
                                  categoryId:nil
                                    callback:^(BOOL success, id result) {
-                                       
+                                       NSLog(@"%@", result);
                                    }];
     
 //    _venuesSortedByCheckins = [NSArray array];
@@ -132,18 +139,21 @@
 
 #pragma mark - Table view data source
 
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    id <NSFetchedResultsSectionInfo> sectionInfo = self.fetchedResultsController.sections[section];
+    return [sectionInfo name];
+}
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-#warning Potentially incomplete method implementation.
-    // Return the number of sections.
-    return 0;
+    return self.fetchedResultsController.sections.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-#warning Incomplete method implementation.
-    // Return the number of rows in the section.
-    return 0;
+    id <NSFetchedResultsSectionInfo> sectionInfo = self.fetchedResultsController.sections[section];
+    return [sectionInfo numberOfObjects];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -151,22 +161,19 @@
     static NSString *CellIdentifier = @"venue";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
-    // Configure the cell...
+    Venue *venue = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    
+    cell.textLabel.text = venue.name;
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ checkins, %@ here now", venue.checkInCount, venue.peopleHereNow];
+    
+    if (venue.imageName) {
+        NSURL *venueImageURL = [NSURL URLWithString:venue.imageName];
+        NSString *venueImageFileName = [venueImageURL  lastPathComponent];
+        NSURL *localVenueURL = [self.documentsDirectory URLByAppendingPathComponent:venueImageFileName];
+        cell.imageView.image = [UIImage imageWithContentsOfFile:[localVenueURL path]];
+    }
     
     return cell;
-}
-
-#pragma mark - Table view delegate
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     */
 }
 
 @end

@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import <CoreData/CoreData.h>
+#import "ViewController.h"
 
 @interface AppDelegate ()
 
@@ -25,6 +26,10 @@
 {
     [self setupManagedObjectContext];
     // Override point for customization after application launch.
+    ViewController *viewController = (ViewController *)((UINavigationController *)self.window.rootViewController).topViewController;
+    
+    viewController.managedObjectContext = self.managedObjectContext;
+    
     return YES;
 }
 
@@ -50,6 +55,8 @@
     if (persistentStore) {
         self.managedObjectContext = [[NSManagedObjectContext alloc] init];
         self.managedObjectContext.persistentStoreCoordinator = self.persistentStoreCoordinator;
+    } else {
+        NSLog(@"ERROR: %@", error.description);
     }
 }
 							
