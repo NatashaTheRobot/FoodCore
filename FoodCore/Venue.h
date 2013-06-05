@@ -2,14 +2,14 @@
 //  Venue.h
 //  FoodCore
 //
-//  Created by Natasha Murashev on 6/4/13.
+//  Created by Natasha Murashev on 6/5/13.
 //  Copyright (c) 2013 Natasha Murashev. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class Category;
+@class Category, Image;
 
 @interface Venue : NSManagedObject
 
@@ -27,5 +27,14 @@
 @property (nonatomic, retain) NSString * reservationURLString;
 @property (nonatomic, retain) NSString * address;
 @property (nonatomic, retain) Category *category;
+@property (nonatomic, retain) NSSet *images;
+@end
+
+@interface Venue (CoreDataGeneratedAccessors)
+
+- (void)addImagesObject:(Image *)value;
+- (void)removeImagesObject:(Image *)value;
+- (void)addImages:(NSSet *)values;
+- (void)removeImages:(NSSet *)values;
 
 @end

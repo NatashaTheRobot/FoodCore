@@ -10,10 +10,13 @@
 #import "Foursquare2.h"
 #import "Category.h"
 #import "Venue.h"
+#import "Image.h"
 
 @interface ViewController ()
 
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
+
+@property (strong, nonatomic) NSOperationQueue *operationQueue;
 
 @property (strong, nonatomic) CLLocationManager *locationManager;
 
@@ -45,12 +48,18 @@
     self.fileManager = [NSFileManager defaultManager];
     self.documentsDirectory = [self.fileManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask][0];
     
+    self.operationQueue = [[NSOperationQueue alloc] init];
+    [self.operationQueue setMaxConcurrentOperationCount:4];
+    
+    [self setupVenues];
+    
     [self addRefreshControl];
     
     [self setupLocationManager];
     
 }
 
+#pragma mark - refresh control
 - (void)addRefreshControl
 {
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
@@ -109,16 +118,14 @@
                                        [self.refreshControl endRefreshing];
                                        
                                    }];
-                                               
-//                                           [self getImagesForVenues];
     
+        
 }
 
 - (void)persistFoursquareVenueFromResult:(NSArray *)venuesArray
 {
     for (NSDictionary *venueDictionary in venuesArray) {
         
-        // check if venue exists by latitude / longitude?
         if (![self venueExists:venueDictionary]) {
             
             Venue *venue = [NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass([Venue class])
@@ -260,14 +267,80 @@
     cell.textLabel.text = venue.name;
     cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ checkins, %@ here now", venue.checkInCount, venue.peopleHereNow];
     
-    if (venue.imageName) {
-        NSURL *venueImageURL = [NSURL URLWithString:venue.imageName];
+    if (venue.images.count > 0) {
+        NSString *imageFileName = ((Image *)[venue.images anyObject]).fileName;
+        NSURL *venueImageURL = [NSURL URLWithString:imageFileName];
         NSString *venueImageFileName = [venueImageURL  lastPathComponent];
         NSURL *localVenueURL = [self.documentsDirectory URLByAppendingPathComponent:venueImageFileName];
         cell.imageView.image = [UIImage imageWithContentsOfFile:[localVenueURL path]];
+    } else {
+        [self getImagesForVenue:venue atIndexPath:indexPath];
     }
     
     return cell;
+}
+
+- (void)getImagesForVenue:(Venue *)venue atIndexPath:(NSIndexPath *)indexPath
+{
+    [Foursquare2 getPhotosForVenue:venue.foursquareId
+                             limit:[NSNumber numberWithInt:5]
+                            offset:nil
+                          callback:^(BOOL success, id result) {
+                              if (success) {
+                                  if ([[result valueForKeyPath:@"response.photos.count"] intValue] > 0) {
+                                  
+                                      NSDictionary *photoItem = [result valueForKeyPath:@"response.photos.items"][0];
+                                      
+                                      //TODO iterate through all the returned photos and download the images
+                                      
+                                      NSString *imageSize = @"300x200";
+                                      NSString *imageURLString = [NSString stringWithFormat:@"%@%@%@",
+                                                                  [photoItem objectForKey:@"prefix"],
+                                                                  imageSize,
+                                                                  [photoItem objectForKey:@"suffix"]];
+                                      [self downloadImageWithURL:[NSURL URLWithString:imageURLString]
+                                                        forVenue:venue
+                                                     atIndexPath:indexPath];
+                                      }
+                              }
+                          }];
+}
+
+- (void)downloadImageWithURL:(NSURL *)imageURL forVenue:(Venue *)venue atIndexPath:(NSIndexPath *)indexPath
+{
+    NSBlockOperation *fetchOperation = [NSBlockOperation blockOperationWithBlock:^{
+        NSData *imageData = [NSData dataWithContentsOfURL:imageURL];        
+        
+        // save image data to file
+        NSString *imageFileName = [imageURL lastPathComponent];
+        NSURL *localImageURL = [self.documentsDirectory URLByAppendingPathComponent:imageFileName];
+        [imageData writeToURL:localImageURL atomically:YES];
+        
+        NSBlockOperation *mainQueueOperation = [NSBlockOperation blockOperationWithBlock:^{
+            
+            Image *image = [NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass([Image class])
+                                                         inManagedObjectContext:self.managedObjectContext];
+            image.fileName = imageFileName;
+            image.venue = venue;
+
+            // refresh table cell if it's the first image?
+            [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:0];
+            
+            // never saved!
+            NSError *saveError = nil;
+            BOOL saved = [self.managedObjectContext save:&saveError];
+            
+            if (!saved) {
+                NSLog(@"SAVE ERROR: %@", saveError);
+            }
+            
+        }];
+        
+        [[NSOperationQueue mainQueue] addOperation:mainQueueOperation];
+    }];
+    
+    [self.operationQueue addOperation:fetchOperation];
+    
 }
 
 @end

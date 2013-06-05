@@ -2,12 +2,13 @@
 //  Venue.m
 //  FoodCore
 //
-//  Created by Natasha Murashev on 6/4/13.
+//  Created by Natasha Murashev on 6/5/13.
 //  Copyright (c) 2013 Natasha Murashev. All rights reserved.
 //
 
 #import "Venue.h"
 #import "Category.h"
+#import "Image.h"
 
 
 @implementation Venue
@@ -26,5 +27,6 @@
 @dynamic reservationURLString;
 @dynamic address;
 @dynamic category;
+@dynamic images;
 
 @end

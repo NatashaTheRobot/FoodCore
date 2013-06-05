@@ -4,14 +4,18 @@
         <attribute name="name" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <relationship name="venues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Venue" inverseName="category" inverseEntity="Venue" syncable="YES"/>
     </entity>
+    <entity name="Image" representedClassName="Image" syncable="YES">
+        <attribute name="fileName" attributeType="String" syncable="YES"/>
+        <relationship name="venue" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Venue" inverseName="images" inverseEntity="Venue" syncable="YES"/>
+    </entity>
     <entity name="Venue" representedClassName="Venue" syncable="YES">
         <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="checkInCount" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="city" attributeType="String" syncable="YES"/>
         <attribute name="foursquareId" attributeType="String" syncable="YES"/>
         <attribute name="imageName" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="latitude" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
-        <attribute name="longitude" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="latitude" attributeType="Float" defaultValueString="0.0" indexed="YES" syncable="YES"/>
+        <attribute name="longitude" attributeType="Float" defaultValueString="0.0" indexed="YES" syncable="YES"/>
         <attribute name="menuURLString" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" attributeType="String" syncable="YES"/>
         <attribute name="peopleHereNow" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
@@ -19,9 +23,11 @@
         <attribute name="state" attributeType="String" syncable="YES"/>
         <attribute name="zipCode" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <relationship name="category" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Category" inverseName="venues" inverseEntity="Category" syncable="YES"/>
+        <relationship name="images" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Image" inverseName="venue" inverseEntity="Image" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Venue" positionX="160" positionY="192" width="128" height="255"/>
+        <element name="Venue" positionX="160" positionY="192" width="128" height="270"/>
         <element name="Category" positionX="160" positionY="192" width="128" height="75"/>
+        <element name="Image" positionX="160" positionY="192" width="128" height="75"/>
     </elements>
 </model>
